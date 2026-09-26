@@ -4,14 +4,18 @@ let boot = {}, me = null, view = 'schoolai', cache = {classes:[], quizzes:[], me
 
 async function api(path, body) {
   const res = await fetch('/api' + path, {method: body ? 'POST' : 'GET', headers: body ? {'Content-Type':'application/json'} : {}, body: body ? JSON.stringify(body) : undefined});
-  const data = await res.json();
+  const type = res.headers.get('content-type') || '';
+  if (!type.includes('application/json')) throw Error('The StudyPLUS backend is not running. GitHub Pages serves the website files but cannot run the Python API or SQLite. Start it with: python server.py');
+  let data;
+  try { data = await res.json(); } catch { throw Error('The StudyPLUS server returned an invalid response. Restart it with: python server.py'); }
   if (!res.ok) throw Error(data.error || data.message || 'Something went wrong.');
   return data;
 }
 function toast(message) { const el=$('#toast'); el.textContent=message; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2400); }
+function backendUnavailable(message) { $('#app').innerHTML=`<div class="auth-screen"><section class="auth-art"><div class="brand"><span class="brand-mark">✦</span>Study<span>PLUS</span></div><h1>Start the StudyPLUS server</h1><p>The GitHub repository stores your app code. The Python server runs the API and SQLite database.</p></section><section class="auth-form-side"><div class="auth-box"><h2>Backend not reachable</h2><p>${esc(message)}</p><pre>python server.py</pre><p>Run that command from the StudyPLUS project folder, then open http://localhost:8000.</p></div></section></div>`; }
 async function start() {
   try { boot=await api('/bootstrap'); if (boot.me) { me=boot.me; await loadView(); } else authPage(); }
-  catch { authPage(); }
+  catch(err) { backendUnavailable(err.message); }
 }
 function authPage(mode='login') {
   const setup=!boot.owner_exists && mode==='login';

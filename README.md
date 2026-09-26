@@ -12,6 +12,10 @@ A small local learning app with separate School AI search, Programming Class qui
 
 The app creates `studyplus.db` in this folder. It stores accounts, classes, quizzes, and quiz scores. Passwords are salted and hashed. The database and `.env` are excluded from Git by `.gitignore`.
 
+## GitHub hosting
+
+GitHub stores this source code, but GitHub Pages cannot run the Python API or SQLite database. Opening the repository or enabling Pages alone will not run the app. Run it locally with the steps above, or deploy `server.py` to a Python host with persistent disk storage for SQLite.
+
 ## Features
 
 - **School AI:** opens a Google search for a study question. In-app AI-written answers are not connected yet; that needs an AI provider configuration.
