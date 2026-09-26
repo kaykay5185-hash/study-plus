@@ -1,0 +1,17 @@
+# Local accounts, quiz attempts, and other private app data
+studyplus.db
+studyplus.db-*
+
+# Local secrets and configuration
+.env
+
+# Python generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
